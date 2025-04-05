@@ -1,0 +1,11 @@
+name = "VerifiedSchnorr"
+version = "0.1.0"
+defaultTargets = ["VerifiedSchnorr"]
+
+[[lean_lib]]
+name = "VerifiedSchnorr"
+
+[[require]]
+name = "mathlib"
+scope = "leanprover-community"
+rev = "nightly-testing-2025-03-24"
