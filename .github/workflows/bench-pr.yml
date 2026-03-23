@@ -4,6 +4,11 @@ on:
   issue_comment:
     types: [created]
 
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+
 jobs:
   benchmark:
     # Only run on PR comments that are exactly "!bench" from org members
@@ -60,6 +65,7 @@ jobs:
       - name: Run benchmark
         env:
           BENCH_AUTH_TOKEN: ${{ secrets.BENCH_AUTH_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           RUNNER_SRC="${{ vars.BENCHWARMER_RUNNER_PATH || 'runner' }}"
           bash "$RUNNER_SRC/bench.sh" \

@@ -6,6 +6,10 @@ on:
     - cron: '0 6 * * 1'
   workflow_dispatch:
 
+permissions:
+  contents: read
+  issues: write
+
 jobs:
   benchmark:
     runs-on: ubuntu-latest
@@ -28,6 +32,7 @@ jobs:
       - name: Run benchmark
         env:
           BENCH_AUTH_TOKEN: ${{ secrets.BENCH_AUTH_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           RUNNER_SRC="${{ vars.BENCHWARMER_RUNNER_PATH || 'runner' }}"
           bash "$RUNNER_SRC/bench.sh" \
