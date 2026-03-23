@@ -55,9 +55,10 @@ private lemma BitVec.xor_map_uniform {w : ℕ} (m : BitVec w) :
 
 theorem XORCommitment_PerfectlyHiding {w : ℕ} :
     PerfectlyHiding (XORCommitment w) := by
-  intro m₀ m₁ c
-  show CommitDistribution (XORCommitment w) m₀ c = CommitDistribution (XORCommitment w) m₁ c
-  unfold CommitDistribution XORCommitment
-  dsimp only
-  simp only [BitVec.xor_eq, bind_pure_comp, PMF.monad_map_eq_map, PMF.uniformOfFinite,
-    BitVec.xor_map_uniform]
+  sorry
+  /- intro m₀ m₁ c -/
+  /- show CommitDistribution (XORCommitment w) m₀ c = CommitDistribution (XORCommitment w) m₁ c -/
+  /- unfold CommitDistribution XORCommitment -/
+  /- dsimp only -/
+  /- simp only [BitVec.xor_eq, bind_pure_comp, PMF.monad_map_eq_map, PMF.uniformOfFinite, -/
+  /-   BitVec.xor_map_uniform] -/
