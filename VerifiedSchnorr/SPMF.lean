@@ -24,13 +24,13 @@ protected theorem ext {p q : SPMF α} (h : ∀ x, p x = q x) : p = q :=
 -- theorem tsum_coe (p : SPMF α) : ∑' a, p a = 1 :=
 --   p.hasSum_coe_one.tsum_eq
 
-theorem tsum_coe_ne_top (p : SPMF α) : ∑' a, p a ≠ ∞ := sorry
-  -- p.tsum_coe.symm ▸ ENNReal.one_ne_top
+theorem tsum_coe_ne_top (p : SPMF α) : ∑' a, p a ≠ ∞ := by
+  obtain ⟨h, hlt, hsum⟩ := p.2
+  exact hsum.tsum_eq ▸ ne_of_lt (lt_trans hlt ENNReal.one_lt_top)
 
 theorem tsum_coe_indicator_ne_top (p : SPMF α) (s : Set α) : ∑' a, s.indicator p a ≠ ∞ :=
   ne_of_lt (lt_of_le_of_lt
-    (tsum_le_tsum (fun _ => Set.indicator_apply_le fun _ => le_rfl) ENNReal.summable
-      ENNReal.summable)
+    (ENNReal.tsum_le_tsum (fun _ => Set.indicator_apply_le fun _ => le_rfl))
     (lt_of_le_of_ne le_top p.tsum_coe_ne_top))
 
 -- @[simp]
@@ -49,8 +49,8 @@ theorem mem_support_iff (p : SPMF α) (a : α) : a ∈ p.support ↔ p a ≠ 0 :
 --   Function.support_nonempty_iff.2 p.coe_ne_zero
 
 @[simp]
-theorem support_countable (p : SPMF α) : p.support.Countable := sorry
-  -- Summable.countable_support_ennreal (tsum_coe_ne_top p)
+theorem support_countable (p : SPMF α) : p.support.Countable :=
+  Summable.countable_support_ennreal (tsum_coe_ne_top p)
 
 theorem apply_eq_zero_iff (p : SPMF α) (a : α) : p a = 0 ↔ a ∉ p.support := by
   rw [mem_support_iff, Classical.not_not]
@@ -79,10 +79,11 @@ theorem apply_eq_one_iff (p : SPMF α) (a : α) : p a = 1 ↔ p.support = {a} :=
   --   _ = ∑' b, (ite (b = a) (p b) 0 + ite (b = a) 0 (p b)) := ENNReal.tsum_add.symm
   --   _ = ∑' b, p b := tsum_congr fun b => by split_ifs <;> simp only [zero_add, add_zero, le_rfl]
 
-theorem coe_le_one (p : SPMF α) (a : α) : p a ≤ 1 := by sorry
-  -- classical
-  -- refine hasSum_le (fun b => ?_) (hasSum_ite_eq a (p a)) (hasSum_coe_one p)
-  -- split_ifs with h <;> simp only [h, zero_le', le_rfl]
+theorem coe_le_one (p : SPMF α) (a : α) : p a ≤ 1 := by
+  obtain ⟨h, hlt, hsum⟩ := p.2
+  calc p a ≤ ∑' a, p a := ENNReal.le_tsum a
+    _ = h := hsum.tsum_eq
+    _ ≤ 1 := le_of_lt hlt
 
 theorem apply_ne_top (p : SPMF α) (a : α) : p a ≠ ∞ :=
   ne_of_lt (lt_of_le_of_lt (p.coe_le_one a) ENNReal.one_lt_top)

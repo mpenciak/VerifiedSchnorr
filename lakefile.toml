@@ -8,4 +8,3 @@ name = "VerifiedSchnorr"
 [[require]]
 name = "mathlib"
 scope = "leanprover-community"
-rev = "nightly-testing-2025-03-24"
