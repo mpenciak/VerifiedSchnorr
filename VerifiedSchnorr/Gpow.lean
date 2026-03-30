@@ -12,6 +12,7 @@ def gpow (g : G) (z : ZMod q) : G := g ^ (z.val : ℤ)
 omit [NeZero q] in
 private lemma zpow_val_mod (g : G) (hord : orderOf g = q) (n : ℕ) :
     g ^ ((n % q : ℕ) : ℤ) = g ^ (n : ℤ) := by
+  sleep 10000
   rw [zpow_natCast, zpow_natCast,
     show n % q = n % orderOf g from by rw [hord], pow_mod_orderOf]
 
