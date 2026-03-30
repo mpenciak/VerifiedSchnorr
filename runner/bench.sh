@@ -51,8 +51,7 @@ mkdir -p "$BENCH_DIR"
 #   - Any other dependency builds you don't want included in benchmark timing
 # =============================================================================
 echo "--- Preprocess ---"
-
-lake exe cache get
+lake clean && lake exe cache get
 
 # =============================================================================
 # Build
@@ -90,14 +89,15 @@ fi
 
 mkdir -p "$PROFILE_DIR"
 
-find "$LIB_DIR" -name '*.lean' -type f | while read -r lean_file; do
-    rel_path="${lean_file#"$REPO_ROOT/"}"
-    out_name="${rel_path//\//__}"
-    out_name="${out_name%.lean}.profile"
-
-    echo "  Profiling: $rel_path"
-    lake env lean -Dtrace.profiler=true "$lean_file" > "$PROFILE_DIR/$out_name" 2>&1 || true
-done
+NPROC=$(nproc)
+echo "Running $NPROC files in parallel"
+find "$LIB_DIR" -name '*.lean' -type f | parallel --ungroup -j$NPROC '
+      rel_path={= s{^'"$REPO_ROOT"'/}{} =}
+      out_name="${rel_path//\//__}"
+      out_name="${out_name%.lean}.profile"
+      echo "  Profiling: $rel_path"
+      lake env lean -Dtrace.profiler=true {} > "'"$PROFILE_DIR"'/$out_name" 2>&1 || true
+  '
 
 ROOT_LEAN="$REPO_ROOT/$LIB_NAME.lean"
 if [ -f "$ROOT_LEAN" ]; then
