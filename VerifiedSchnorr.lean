@@ -5,3 +5,4 @@ import VerifiedSchnorr.Commitment
 import VerifiedSchnorr.SigmaProtocol
 import VerifiedSchnorr.Schnorr
 import VerifiedSchnorr.Pedersen
+import VerifiedSchnorr.ChaumPedersen
